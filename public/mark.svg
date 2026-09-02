@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- A price tag, because it is the one thing they publish that nobody else
+       does. -->
+  <path d="M25.5 5.5h13a4 4 0 0 1 4 4v13L22.6 42.4a3 3 0 0 1-4.2 0L5.6 29.6a3 3 0 0 1 0-4.2L25.5 5.5Z"
+        stroke="#ff3d44" stroke-width="2.6" stroke-linejoin="round" fill="none" />
+  <circle cx="34" cy="14" r="3.2" fill="#ff3d44" />
+</svg>

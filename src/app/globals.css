@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+@theme {
+  /*
+   * Motor Zone publish no photography at all — every post is a designed offer
+   * card, black with the figures set large in red and white. So this palette
+   * is taken from the cards themselves rather than from a room: their card
+   * black (#100000), their offer red measured at #F4121A, and the near-white
+   * they set prices in.
+   *
+   * There is no third colour, because there is nothing else on the page but
+   * money. Red is reserved strictly for figures and for the discount; it is
+   * never decoration.
+   */
+  --color-card: #0d0e10;
+  --color-card-2: #15171a;
+  --color-card-3: #1e2126;
+  --color-chalk: #f4f2ef; /* 16.4:1 on card */
+  --color-chalk-2: #a2a7ae; /* 7.4:1 on card */
+  --color-chalk-3: #6a7078; /* rules only — never text */
+  --color-offer: #ff3d44; /* their red, lifted for text: 6.0:1 on card */
+  --color-offer-deep: #f4121a; /* the measured original, for fills */
+
+  --font-display: var(--font-archivo), "Helvetica Neue", sans-serif;
+  --font-body: var(--font-hanken), system-ui, sans-serif;
+  --font-arabic-display: var(--font-changa), "Segoe UI", sans-serif;
+  --font-arabic-body: var(--font-almarai), system-ui, sans-serif;
+
+  --text-hero: clamp(2.2rem, 6vw, 5rem);
+  --text-display: clamp(1.7rem, 3.6vw, 2.9rem);
+  --text-lead: clamp(1rem, 1.1vw, 1.12rem);
+  /* Money is the largest thing on this page, by design. */
+  --text-money: clamp(2.4rem, 8vw, 6rem);
+
+  --ease-count: cubic-bezier(0.2, 0.9, 0.28, 1);
+}
+
+@layer base {
+  section[id] { scroll-margin-top: 5.5rem; }
+
+  html {
+    background: var(--color-card);
+    color: var(--color-chalk);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: auto;
+  }
+
+  body { font-family: var(--font-body); overflow-x: hidden; }
+  html[dir="rtl"] body { font-family: var(--font-arabic-body); }
+
+  ::selection { background: var(--color-offer-deep); color: var(--color-chalk); }
+  :focus-visible { outline: 2px solid var(--color-offer); outline-offset: 3px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility font-display { font-family: var(--font-display); }
+html[dir="rtl"] .font-display { font-family: var(--font-arabic-display); }
+
+@utility label {
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+html[dir="rtl"] .label {
+  font-family: var(--font-arabic-display);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.88rem;
+}
+
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* A figure they published, as opposed to one this page worked out. */
+@utility theirs {
+  color: var(--color-chalk);
+}
+
+/* A figure computed from their figures. Marked, always. */
+@utility derived {
+  color: var(--color-chalk-2);
+  border-bottom: 1px dashed var(--color-chalk-3);
+}
+
+/*
+ * Motion signature: the count. On a page made of money, figures should arrive
+ * the way a total lands — a hard, short vertical settle with no fade drift,
+ * staggered down the column like a receipt printing.
+ */
+@keyframes count-in {
+  from { opacity: 0; transform: translateY(10px); }
+  60% { opacity: 1; }
+  to { opacity: 1; transform: none; }
+}
+@keyframes rule-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes count-in { from { opacity: 1; transform: none; } to { opacity: 1; transform: none; } }
+  @keyframes rule-draw { from { transform: none; } to { transform: none; } }
+}
+
+/* ---------------------------------------------------------------------------
+ * The reveal, driven by a data attribute the observer writes. Unlayered so a
+ * Tailwind opacity utility cannot outrank the resting state. Touches only
+ * opacity and transform — never clip-path, which would collapse the observed
+ * element's intersection rect to zero.
+ * ------------------------------------------------------------------------ */
+
+[data-count] { opacity: 0; }
+[data-count][data-seen] {
+  animation: count-in 460ms var(--ease-count) var(--count-delay, 0ms) both;
+}
+[data-rule] { transform: scaleX(0); }
+[data-rule][data-seen] {
+  animation: rule-draw 500ms var(--ease-count) var(--count-delay, 0ms) both;
+}
+
+/* ---------------------------------------------------------------------------
+ * Arabic corrections. Unlayered so they outrank Tailwind utilities, and keyed
+ * off [dir] rather than [lang] — browser translation rewrites lang.
+ * ------------------------------------------------------------------------ */
+
+html[dir="ltr"] .text-hero { line-height: 1.0; text-transform: uppercase; }
+html[dir="rtl"] .text-hero {
+  font-size: clamp(2rem, 5.4vw, 4.2rem);
+  /* Changa sets its diacritics high; a tight leading clips them against
+     whatever sits above. */
+  line-height: 1.44;
+  padding-top: 0.1em;
+}
+html[dir="ltr"] .text-display { line-height: 1.06; }
+html[dir="rtl"] .text-display {
+  font-size: clamp(1.5rem, 3.2vw, 2.5rem);
+  line-height: 1.44;
+}
+
+html[dir="rtl"] [class*="tracking-["],
+html[dir="rtl"] .tracking-widest,
+html[dir="rtl"] .tracking-wider { letter-spacing: 0; }
+
+/* Model names and every figure stay Latin and LTR — including inside Arabic
+   copy, because these are prices and they must not reorder. */
+.latin {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-family: var(--font-display);
+}
+html[dir="rtl"] .latin {
+  font-family: var(--font-display);
+  text-align: right;
+}
