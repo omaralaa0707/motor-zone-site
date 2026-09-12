@@ -122,9 +122,7 @@ export const en: ZoneContent = {
   },
 
   footer: {
-    disclaimer:
-      "A concept design, built as a demonstration. Not an official Motor Zone site, and not affiliated with them. All marks and quoted copy belong to Motor Zone. Prices and plans are as they published them and may have changed.",
-    rights: "Concept by Claude",
+    rights: "© Motor Zone. All rights reserved.",
   },
 
   a11y: {

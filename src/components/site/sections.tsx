@@ -512,7 +512,6 @@ export function Footer() {
               </a>
             </nav>
             <div className="max-w-2xl space-y-2.5 border-t border-white/12 pt-5">
-              <p className="text-[0.82rem] leading-relaxed text-chalk-2">{c.footer.disclaimer}</p>
               <p className="label text-chalk-3">{c.footer.rights}</p>
             </div>
           </div>
